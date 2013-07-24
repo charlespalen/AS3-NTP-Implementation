@@ -208,7 +208,11 @@ package com.transcendingdigital.time
 			var p:ByteArray = new ByteArray();
 			this.mode = 3;
 			// Number of seconds since Jan 1 1900
-			var tmpOriginDate:Date = new Date(1900,0,1,0,0,0,0);
+			// Thanks to lizardon for the UTC not local time here
+			var tmpOriginDate:Date = new Date();
+			tmpOriginDate.setUTCFullYear(1900, 0, 1);
+			tmpOriginDate.setUTCHours(0,0,0,0);
+			
 			var tmpNowDate:Date = new Date();
 			this.transmitTimestamp = (tmpNowDate.valueOf()/1000) + (tmpOriginDate.valueOf() / 1000 * -1);
 			
@@ -310,7 +314,8 @@ package com.transcendingdigital.time
 				// convert from number of seconds since 1900 to 1970
 				//var tmpOriginDate:Date = new Date(1900,0,1,0,0,0,0);
 				// tmpOriginDate.valueOf will be a negative value because its BEFORE the unix timestamp
-				var msSinceUnixTS:Number = (this.referenceTimestamp * 1000) - (2208988800000.0);
+				// Thanks to lizardon for the fix here
+				var msSinceUnixTS:Number = (this.transmitTimestamp * 1000) - (2208988800000.0);
 				// 
 				returnDate = new Date(msSinceUnixTS);
 				
